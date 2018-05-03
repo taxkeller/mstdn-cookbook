@@ -86,7 +86,6 @@ bash 'compile' do
   user 'root'
   group 'root'
   code <<-EOH
-    chown -R mastodon:mastodon /home/mastodon/live/public
     docker-compose --project-directory /home/mastodon/live -f /home/mastodon/live/docker-compose.yml run --rm web rails assets:precompile
   EOH
 end

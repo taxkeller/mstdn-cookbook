@@ -118,7 +118,6 @@ $ aws opsworks start-instance --instance-id `cat .env/opsworks-ids/instance-id`
 $ aws opsworks stop-instance --instance-id `cat .env/opsworks-ids/instance-id`
 $ aws opsworks delete-instance --instance-id `cat .env/opsworks-ids/instance-id`
 $ aws opsworks delete-layer --layer-id `cat .env/opsworks-ids/layer-id`
-$ aws opsworks delete-app --app-id `cat .env/opsworks-ids/app-id`
 $ aws opsworks delete-stack --stack-id `cat .env/opsworks-ids/stack-id`
 ```
 
