@@ -1,0 +1,7 @@
+.env/init/params
+.env/layer/layer.json
+.env/opsworks-ids/instance-id
+.env/opsworks-ids/layer-id
+.env/opsworks-ids/stack-id
+.env/opsworks-ids/app-id
+.env/app/environment.json
