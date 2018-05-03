@@ -1,0 +1,85 @@
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  ''      close;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name <%= node['domain'] %>;
+  # Useful for Let's Encrypt
+  location /.well-known/acme-challenge/ { allow all; }
+
+
+  keepalive_timeout    70;
+  sendfile             on;
+  client_max_body_size 0;
+
+  root /home/mastodon/live/public;
+
+  gzip on;
+  gzip_disable "msie6";
+  gzip_vary on;
+  gzip_proxied any;
+  gzip_comp_level 6;
+  gzip_buffers 16 8k;
+  gzip_http_version 1.1;
+  gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+  add_header Strict-Transport-Security "max-age=31536000";
+  add_header Content-Security-Policy "style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'self'; img-src data: blob: https:; media-src data: https:; connect-src 'self' wss://<%= node['domain'] %>; upgrade-insecure-requests";
+
+  set_real_ip_from   <%= node['subnet'] %>;
+  real_ip_header     X-Forwarded-For;
+
+  location / {
+    try_files $uri @proxy;
+  }
+
+  location ~ ^/(assets|system/media_attachments/files|system/accounts/avatars) {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri @proxy;
+  }
+
+  location @proxy {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Proxy "";
+    proxy_pass_header Server;
+
+    proxy_pass http://127.0.0.1:3000;
+    proxy_buffering off;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    tcp_nodelay on;
+  }
+
+  location /api/v1/streaming {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Proxy "";
+
+    proxy_pass http://localhost:4000;
+    proxy_buffering off;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    tcp_nodelay on;
+  }
+
+  location = /healthcheck.txt {
+    access_log off;
+    root /var/www/html/;
+  }
+
+  error_page 500 501 502 503 504 /500.html;
+}
