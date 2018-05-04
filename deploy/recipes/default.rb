@@ -56,6 +56,7 @@ search('aws_opsworks_app').each do |app|
       :aws_access_key_id      => app['environment']['aws_access_key_id'],
       :aws_secret_access_key  => app['environment']['aws_secret_access_key'],
       :s3_region              => app['environment']['s3_region'],
+      :s3_protocol            => app['environment']['s3_protocol'],
       :s3_hostname            => app['environment']['s3_hostname'],
       :s3_cloudfront_host     => app['environment']['s3_cloudfront_host'],
       :slack_url              => app['environment']['slack_url'],

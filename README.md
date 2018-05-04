@@ -97,7 +97,7 @@ $ aws opsworks create-layer --stack-id `cat .env/opsworks-ids/stack-id` --type c
 - Create App
 
 ```
-$ aws opsworks create-app --stack-id `cat .env/opsworks-ids/stack-id` --name mastodon --type other --app-source Type=git,Url=https://github.com/taxkeller/mastodon.git --environment file://.env/app/environment.json > .env/opsworks-ids/app-id
+$ aws opsworks create-app --stack-id `cat .env/opsworks-ids/stack-id` --name mastodon --type other --app-source Type=git,Url=https://github.com/taxkeller/mastodon.git --environment file://.env/app/environment.json | grep AppId | cut -d\" -f4 > .env/opsworks-ids/app-id
 ```
 
 - Create Instance
