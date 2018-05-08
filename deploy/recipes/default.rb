@@ -96,7 +96,7 @@ bash 'run' do
   user 'root'
   group 'root'
   code <<-EOH
-    docker-compose --project-directory /home/mastodon/live -f /home/mastodon/live/docker-compose.yml up -d
+    docker-compose --project-directory /home/mastodon/live -f /home/mastodon/live/docker-compose.yml up -d --build
   EOH
 end
 
